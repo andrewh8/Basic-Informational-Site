@@ -1,13 +1,26 @@
 const http = require('http');
-const url = require('url');
 const fs = require('fs');
 const port = 8080;
 
 const server = http.createServer(function(req, res) {
-    const q = url.parse(req.url, true);
-    const filename = '.' + q.pathname;
+    let path = './';
 
-    fs.readFile(filename, function(err, data) {
+    switch(req.url) {
+        case '/': 
+            path += 'index.html';
+            break;
+        case '/about': 
+            path += 'about.html';
+            break;
+        case '/contact-me':
+            path += 'contact-me.html';
+            break;
+        default:
+            path += '404.html';
+            break;
+    }
+
+    fs.readFile(path, function(err, data) {
         if (err) {
             res.writeHead(404, {'Content-Type': 'text/html'});
             res.write('Error: File Not Found');
